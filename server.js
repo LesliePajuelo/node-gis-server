@@ -1,12 +1,12 @@
 var express = require('express'),
     fs = require('fs');
 
- 
+
 var app = express();
 app.use(express.bodyParser());
 app.use(app.router);
-app.conString = "postgres://bdollins:ZAQ!xsw2@localhost:5432/geo2";
-//app.use(error);
+app.conString = "postgres://postgres:postgres@localhost:5432/manotest";
+app.use(error);
 
 process.on('uncaughtException', function (error) {
    console.log(error.stack);
@@ -18,16 +18,18 @@ fs.readdirSync('./controllers').forEach(function (file) {
       route = require('./controllers/' + file);
       route.controller(app);
   }
+
 });
 
-/*function error(err, req, res, next) {
+function error(err, req, res, next) {
   // log it
   console.log(err);
-  //console.error(err.stack);
+  console.error(err.stack);
 
   // respond with 500 "Internal Server Error".
   res.send(500);
-}*/
- 
+}
+app.use(express.static(__dirname + '/'));
+
 app.listen(3000);
 console.log('Listening on port 3000...');
