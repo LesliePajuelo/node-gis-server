@@ -17,6 +17,7 @@ module.exports.controller = function (app) {
 	 */
 
 app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
+	console.log(req);
                 var queryshape= ' {"type": "Point", "coordinates": [' + req.query['lng']  + ',' + req.query['lat']  +'] }'
 		//res.status(501).send('Intersect not implemented');
 		var geom = req.params.geom.toLowerCase();
@@ -154,7 +155,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 });
 });
 });
-	
+
 
 
 		var client = new pg.Client(app.conString);
