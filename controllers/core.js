@@ -29,10 +29,10 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		var schemaname = req.params.schema;
 		var tablename = req.params.table;
 		var fullname = schemaname + "." + tablename;
-		client.connect();
+		client.connect(function(err) {
 		console.log('3');
-		var idformat = "'" + req.params.id + "'";
-		idformat = idformat.toUpperCase();
+		// var idformat = "'" + req.params.id + "'";
+		// idformat = idformat.toUpperCase();
 		var spatialcol = "wkb_geometry";
     // var meta = client.query("select * from " + tablename + ";");
 		var sql;
@@ -50,7 +50,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 					features : []
 				};
 				console.log(6);
-				console.log(query);
+				//console.log(query);
 			} else if (geom == "geometry") {
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
 				query = client.query(sql);
@@ -87,7 +87,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				//res.status(500).send(error);
 				//next();
 			});
-
+	});
 		// });
 	});
 // 	app.get('/vector/:schema/:table/:geom', function (req, res, next) {
