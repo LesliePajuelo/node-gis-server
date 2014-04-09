@@ -46,7 +46,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 			var coll;
 			if (geom == "features") {
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
-				console.log(sql);
+				//console.log(sql);
 				query = client.query(sql);
                         	coll = {
 					type : "FeatureCollection",
@@ -54,7 +54,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				};
 			} else if (geom == "geometry") {
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
-				console.log(sql);
+				//console.log(sql);
 				query = client.query(sql);
 				coll = {
 					type : "GeometryCollection",
