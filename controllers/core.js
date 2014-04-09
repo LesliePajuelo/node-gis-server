@@ -18,8 +18,6 @@ module.exports.controller = function (app) {
 
 app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
   var queryshape= ' {"type": "Point", "coordinates": [' + req.query['lng']  + ',' + req.query['lat']  +'] }'
-  console.log(queryshape);
-		//res.status(501).send('Intersect not implemented');
 		var geom = req.params.geom.toLowerCase();
 		if ((geom != "features") && (geom != "geometry")) {
 			res.status(404).send("Resource '" + geom + "' not found");
@@ -30,12 +28,6 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		var tablename = req.params.table;
 		var fullname = schemaname + "." + tablename;
 		client.connect();
-		// var crsobj = {
-		// 	"type" : "name",
-		// 	"properties" : {
-		// 		"name" : "urn:ogc:def:crs:EPSG:6.3:4326"
-		// 	}
-		// };
 		var idformat = "'" + req.params.id + "'";
 		idformat = idformat.toUpperCase();
 		var spatialcol = "wkb_geometry";
@@ -46,7 +38,6 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 			var coll;
 			if (geom == "features") {
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
-				//console.log(sql);
 				query = client.query(sql);
                         	coll = {
 					type : "FeatureCollection",
@@ -54,7 +45,6 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				};
 			} else if (geom == "geometry") {
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
-				//console.log(sql);
 				query = client.query(sql);
 				coll = {
 					type : "GeometryCollection",
@@ -63,6 +53,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 			}
 
 			query.on('row', function (result) {
+				console.log('here');
 				var props = new Object;
 				if (!result) {
 					return res.send('No data found');
@@ -71,7 +62,6 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 						coll.features.push(geojson.getFeatureResult(result, spatialcol));
 					} else if (geom == "geometry") {
 						var shape = JSON.parse(result.geojson);
-						//shape.crs = crsobj;
 						coll.geometries.push(shape);
 					}
 				}
