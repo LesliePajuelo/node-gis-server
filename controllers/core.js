@@ -47,20 +47,20 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				});
 			}
 
-			query.on('row', function (result) {
-				console.log('here');
-				var props = new Object;
-				if (!result) {
-					return res.send('No data found');
-				} else {
-					if (geom == "features") {
-						coll.features.push(geojson.getFeatureResult(result, spatialcol));
-					} else if (geom == "geometry") {
-						var shape = JSON.parse(result.geojson);
-						coll.geometries.push(shape);
-					}
-				}
-			});
+			// query.on('row', function (result) {
+			// 	console.log('here');
+			// 	var props = new Object;
+			// 	if (!result) {
+			// 		return res.send('No data found');
+			// 	} else {
+			// 		if (geom == "features") {
+			// 			coll.features.push(geojson.getFeatureResult(result, spatialcol));
+			// 		} else if (geom == "geometry") {
+			// 			var shape = JSON.parse(result.geojson);
+			// 			coll.geometries.push(shape);
+			// 		}
+			// 	}
+			// });
 
 			query.on('end', function (result) {
 				console.log(result);
