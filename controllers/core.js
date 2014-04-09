@@ -37,6 +37,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		if (geom == "features") {
 				console.log('5');
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
+				console.log(sql);
 				coll = {
 					type : "FeatureCollection",
 					features : []
