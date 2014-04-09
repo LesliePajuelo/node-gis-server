@@ -127,15 +127,15 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				if (geom == "features") {
                                         sql = "select st_asgeojson(st_transform(wkb_geometry,4326)) as geojson, * from " + tablename + ";";
 					//sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + fullname + whereclause;
-                                        if(tablename == 'uk') sql = "select st_asgeojson(wkb_geometry) as geojson, * from " + tablename + " limit 100;";
-                                        console.log(sql);
+                                        //if(tablename == 'uk') sql = "select st_asgeojson(wkb_geometry) as geojson, * from " + tablename + " limit 100;";
+                                        //console.log(sql);
 					coll = {
 						type : "FeatureCollection",
 						features : []
 					};
 				} else if (geom == "geometry") {
                                         sql = "select st_asgeojson(st_transform(wkb_geometry,4326)) as geojson, * from " + tablename + ";";
-                                        console.log(sql);
+                                        //console.log(sql);
 						coll = {
 						type : "GeometryCollection",
 						geometries : []
