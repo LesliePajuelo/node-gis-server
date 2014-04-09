@@ -44,6 +44,8 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				client.query(sql, function(err,result){
 					console.log(6);
 					console.log(result);
+					res.send(jsonp.getJsonP(req.query.callback, coll));
+					client.end();
 				});
 			}
 
@@ -62,18 +64,17 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 			// 	}
 			// });
 
-			query.on('end', function (result) {
-				console.log(result);
-				res.send(jsonp.getJsonP(req.query.callback, coll));
-                                client.end();
+			// query.on('end', function (result) {
 
-			});
-			query.on('error', function (error) {
-                                client.end();
-				//handle the error
-				//res.status(500).send(error);
-				//next();
-			});
+
+
+			// });
+			// query.on('error', function (error) {
+   //                              client.end();
+			// 	//handle the error
+			// 	//res.status(500).send(error);
+			// 	//next();
+			// });
 	});
 		// });
 	});
