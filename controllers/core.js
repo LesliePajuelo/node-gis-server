@@ -41,7 +41,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 					type : "FeatureCollection",
 					features : []
 				};
-				client.query(sql);
+				query=client.query(sql);
 			}
 
 			query.on('row', function (result) {
