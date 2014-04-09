@@ -31,33 +31,20 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		var fullname = schemaname + "." + tablename;
 		client.connect(function(err) {
 		console.log('3');
-		// var idformat = "'" + req.params.id + "'";
-		// idformat = idformat.toUpperCase();
 		var spatialcol = "wkb_geometry";
-    // var meta = client.query("select * from " + tablename + ";");
-		var sql;
-		// meta.on('row', function (row) {
-			var query;
-			var coll;
-			console.log('4');
-			console.log(geom);
-			if (geom == "features") {
+    var sql;
+		var coll;
+		if (geom == "features") {
 				console.log('5');
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
-				query = client.query(sql);
-                        	coll = {
+				coll = {
 					type : "FeatureCollection",
 					features : []
 				};
-				console.log(6);
-				//console.log(query);
-			} else if (geom == "geometry") {
-				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
-				query = client.query(sql);
-				coll = {
-					type : "GeometryCollection",
-					geometries : []
-				};
+				client.query(sql, function(err,result){
+					console.log(6);
+					console.log(result);
+				});
 			}
 
 			query.on('row', function (result) {
