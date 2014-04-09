@@ -17,8 +17,8 @@ module.exports.controller = function (app) {
 	 */
 
 app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
-	console.log(req);
-                var queryshape= ' {"type": "Point", "coordinates": [' + req.query['lng']  + ',' + req.query['lat']  +'] }'
+  var queryshape= ' {"type": "Point", "coordinates": [' + req.query['lng']  + ',' + req.query['lat']  +'] }'
+  console.log(queryshape);
 		//res.status(501).send('Intersect not implemented');
 		var geom = req.params.geom.toLowerCase();
 		if ((geom != "features") && (geom != "geometry")) {
@@ -39,18 +39,23 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		var idformat = "'" + req.params.id + "'";
 		idformat = idformat.toUpperCase();
 		var spatialcol = "wkb_geometry";
-                var meta = client.query("select * from " + tablename + ";");
+    var meta = client.query("select * from " + tablename + ";");
+		var sql;
 		meta.on('row', function (row) {
 			var query;
 			var coll;
 			if (geom == "features") {
-				query = client.query("select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));");
+				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
+				console.log(sql);
+				query = client.query(sql);
                         	coll = {
 					type : "FeatureCollection",
 					features : []
 				};
 			} else if (geom == "geometry") {
-				query = client.query("select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));");
+				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
+				console.log(sql);
+				query = client.query(sql);
 				coll = {
 					type : "GeometryCollection",
 					geometries : []
