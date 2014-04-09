@@ -30,12 +30,12 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		var tablename = req.params.table;
 		var fullname = schemaname + "." + tablename;
 		client.connect();
-		var crsobj = {
-			"type" : "name",
-			"properties" : {
-				"name" : "urn:ogc:def:crs:EPSG:6.3:4326"
-			}
-		};
+		// var crsobj = {
+		// 	"type" : "name",
+		// 	"properties" : {
+		// 		"name" : "urn:ogc:def:crs:EPSG:6.3:4326"
+		// 	}
+		// };
 		var idformat = "'" + req.params.id + "'";
 		idformat = idformat.toUpperCase();
 		var spatialcol = "wkb_geometry";
@@ -78,6 +78,7 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 			});
 
 			query.on('end', function (result) {
+				console.log(result);
 				res.send(jsonp.getJsonP(req.query.callback, coll));
                                 client.end();
 
