@@ -44,7 +44,8 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				client.query(sql, function(err,result){
 					console.log(6);
 					console.log(result);
-					res.send(jsonp.getJsonP(req.query.callback, coll));
+					console.log(7);
+					res.send(jsonp.getJsonP(req.query.callback, result));
 					client.end();
 				});
 			}
