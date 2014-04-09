@@ -41,35 +41,28 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 					type : "FeatureCollection",
 					features : []
 				};
-				client.query(sql, function(err,result){
-					console.log(6);
-					console.log(result);
-					console.log(7);
-					res.send(jsonp.getJsonP(req.query.callback, result));
-					client.end();
-				});
+				client.query(sql);
 			}
 
-			// query.on('row', function (result) {
-			// 	console.log('here');
-			// 	var props = new Object;
-			// 	if (!result) {
-			// 		return res.send('No data found');
-			// 	} else {
-			// 		if (geom == "features") {
-			// 			coll.features.push(geojson.getFeatureResult(result, spatialcol));
-			// 		} else if (geom == "geometry") {
-			// 			var shape = JSON.parse(result.geojson);
-			// 			coll.geometries.push(shape);
-			// 		}
-			// 	}
-			// });
+			query.on('row', function (result) {
+				console.log('here');
+				var props = new Object;
+				if (!result) {
+					return res.send('No data found');
+				} else {
+					if (geom == "features") {
+						coll.features.push(geojson.getFeatureResult(result, spatialcol));
+					} else if (geom == "geometry") {
+						var shape = JSON.parse(result.geojson);
+						coll.geometries.push(shape);
+					}
+				}
+			});
 
-			// query.on('end', function (result) {
-
-
-
-			// });
+		query.on('end', function (err, result) {
+				res.setHeader('Content-Type', 'application/json');
+				res.send(jsonp.getJsonP(req.query.callback, coll));
+			});
 			// query.on('error', function (error) {
    //                              client.end();
 			// 	//handle the error
