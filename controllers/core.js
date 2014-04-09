@@ -31,9 +31,9 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		var idformat = "'" + req.params.id + "'";
 		idformat = idformat.toUpperCase();
 		var spatialcol = "wkb_geometry";
-    var meta = client.query("select * from " + tablename + ";");
+    // var meta = client.query("select * from " + tablename + ";");
 		var sql;
-		meta.on('row', function (row) {
+		// meta.on('row', function (row) {
 			var query;
 			var coll;
 			if (geom == "features") {
@@ -80,79 +80,79 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 				//next();
 			});
 
-		});
+		// });
 	});
-	app.get('/vector/:schema/:table/:geom', function (req, res, next) {
-		var client = new pg.Client(app.conString);
-		var geom = req.params.geom.toLowerCase();
-		if ((geom != "features") && (geom != "geometry")) {
-			res.status(404).send("Resource '" + geom + "' not found");
-			return;
-		}
-		var schemaname = req.params.schema;
-		var tablename = req.params.table;
-		var fullname = schemaname + "." + tablename;
-                var proptype = req.query.type;
-		var whereclause = ";";
-		if (typeof proptype != "undefined") {
-			if (proptype.toLowerCase() != "all") {
-				whereclause = " where structure_ = '" + proptype + "';";
-			}
-		}
-		var coll;
-		var sql = "";
-		client.connect(function (err) {
-			if (err) {
-				res.status(500).send(err);
-				client.end();
-				return console.error('could not connect to postgres', err);
-			}
-			client.query("select * from " + tablename + ";", function (err, result) {
-				if (err) {
-					res.status(500).send(err);
-					client.end();
-					return console.error('error running query', err);
-				}
-				spatialcol = result.rows[0].wkb_geometry;
-				if (geom == "features") {
-                                        sql = "select st_asgeojson(st_transform(wkb_geometry,4326)) as geojson, * from " + tablename + ";";
-					//sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + fullname + whereclause;
-                                        //if(tablename == 'uk') sql = "select st_asgeojson(wkb_geometry) as geojson, * from " + tablename + " limit 100;";
-                                        //console.log(sql);
-					coll = {
-						type : "FeatureCollection",
-						features : []
-					};
-				} else if (geom == "geometry") {
-                                        sql = "select st_asgeojson(st_transform(wkb_geometry,4326)) as geojson, * from " + tablename + ";";
-                                        //console.log(sql);
-						coll = {
-						type : "GeometryCollection",
-						geometries : []
-					};
-				}
-				client.query(sql, function (err, result) {
-					if (err) {
-						res.status(500).send(err);
-						client.end();
-						return console.error('error running query', err);
-					}
-					for (var i = 0; i < result.rows.length; i++) {
-						if (geom == "features") {
-							coll.features.push(geojson.getFeatureResult(result.rows[i], "shape"));
-						} else if (geom == "geometry") {
-							var shape = JSON.parse(result.rows[i].geojson);
-							//shape.crs = crsobj;
-							coll.geometries.push(shape);
-						}
-					}
-					client.end();
-					res.send(jsonp.getJsonP(req.query.callback, coll));
+// 	app.get('/vector/:schema/:table/:geom', function (req, res, next) {
+// 		var client = new pg.Client(app.conString);
+// 		var geom = req.params.geom.toLowerCase();
+// 		if ((geom != "features") && (geom != "geometry")) {
+// 			res.status(404).send("Resource '" + geom + "' not found");
+// 			return;
+// 		}
+// 		var schemaname = req.params.schema;
+// 		var tablename = req.params.table;
+// 		var fullname = schemaname + "." + tablename;
+//                 var proptype = req.query.type;
+// 		var whereclause = ";";
+// 		if (typeof proptype != "undefined") {
+// 			if (proptype.toLowerCase() != "all") {
+// 				whereclause = " where structure_ = '" + proptype + "';";
+// 			}
+// 		}
+// 		var coll;
+// 		var sql = "";
+// 		client.connect(function (err) {
+// 			if (err) {
+// 				res.status(500).send(err);
+// 				client.end();
+// 				return console.error('could not connect to postgres', err);
+// 			}
+// 			client.query("select * from " + tablename + ";", function (err, result) {
+// 				if (err) {
+// 					res.status(500).send(err);
+// 					client.end();
+// 					return console.error('error running query', err);
+// 				}
+// 				spatialcol = result.rows[0].wkb_geometry;
+// 				if (geom == "features") {
+//                                         sql = "select st_asgeojson(st_transform(wkb_geometry,4326)) as geojson, * from " + tablename + ";";
+// 					//sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + fullname + whereclause;
+//                                         //if(tablename == 'uk') sql = "select st_asgeojson(wkb_geometry) as geojson, * from " + tablename + " limit 100;";
+//                                         //console.log(sql);
+// 					coll = {
+// 						type : "FeatureCollection",
+// 						features : []
+// 					};
+// 				} else if (geom == "geometry") {
+//                                         sql = "select st_asgeojson(st_transform(wkb_geometry,4326)) as geojson, * from " + tablename + ";";
+//                                         //console.log(sql);
+// 						coll = {
+// 						type : "GeometryCollection",
+// 						geometries : []
+// 					};
+// 				}
+// 				client.query(sql, function (err, result) {
+// 					if (err) {
+// 						res.status(500).send(err);
+// 						client.end();
+// 						return console.error('error running query', err);
+// 					}
+// 					for (var i = 0; i < result.rows.length; i++) {
+// 						if (geom == "features") {
+// 							coll.features.push(geojson.getFeatureResult(result.rows[i], "shape"));
+// 						} else if (geom == "geometry") {
+// 							var shape = JSON.parse(result.rows[i].geojson);
+// 							//shape.crs = crsobj;
+// 							coll.geometries.push(shape);
+// 						}
+// 					}
+// 					client.end();
+// 					res.send(jsonp.getJsonP(req.query.callback, coll));
 
-});
-});
-});
-});
+// });
+// });
+// });
+// });
 
 
 
