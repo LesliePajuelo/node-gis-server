@@ -19,15 +19,18 @@ module.exports.controller = function (app) {
 app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
   var queryshape= ' {"type": "Point", "coordinates": [' + req.query['lng']  + ',' + req.query['lat']  +'] }'
 		var geom = req.params.geom.toLowerCase();
+		console.log('1');
 		if ((geom != "features") && (geom != "geometry")) {
 			res.status(404).send("Resource '" + geom + "' not found");
 			return;
 		}
 		var client = new pg.Client(app.conString);
+		console.log('2');
 		var schemaname = req.params.schema;
 		var tablename = req.params.table;
 		var fullname = schemaname + "." + tablename;
 		client.connect();
+		console.log('3');
 		var idformat = "'" + req.params.id + "'";
 		idformat = idformat.toUpperCase();
 		var spatialcol = "wkb_geometry";
@@ -36,6 +39,8 @@ app.get('/vector/:schema/:table/:geom/intersect', function (req, res, next) {
 		// meta.on('row', function (row) {
 			var query;
 			var coll;
+			console.log('4');
+			console.log(geom);
 			if (geom == "features") {
 				sql = "select st_asgeojson(st_transform(" + spatialcol + ",4326)) as geojson, * from " + tablename + " where ST_INTERSECTS(" + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));"
 				query = client.query(sql);
