@@ -1,4 +1,5 @@
 #! /bin/bash
+# before you start, change all instances of "mmarks" to your username and all instances of "manotest" to your database name
 cd /home/mmarks
 sudo apt-get -y install build-essential
 sudo apt-get -y install build-essential postgresql-9.1 postgresql-server-dev-9.1 libxml2-dev libproj-dev libjson0-dev libgeos-dev xsltproc docbook-xsl docbook-mathml
