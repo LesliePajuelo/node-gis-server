@@ -1,5 +1,6 @@
 #! /bin/bash
 cd /home/mmarks
+apt-get update
 sudo apt-get -y install build-essential
 sudo apt-get -y install build-essential postgresql-9.1 postgresql-server-dev-9.1 libxml2-dev libproj-dev libjson0-dev libgeos-dev xsltproc docbook-xsl docbook-mathml
 sudo apt-get -y install libproj-dev
