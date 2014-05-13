@@ -1,4 +1,5 @@
 #! /bin/bash
+# before you start, change all instances of "mmarks" to your username and all instances of "manotest" to your database name
 cd /home/mmarks
 apt-get update
 sudo apt-get -y install build-essential
