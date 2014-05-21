@@ -56,7 +56,6 @@ module.exports.controller = function(app) {
     });
   });
   app.get('/neighbor/:schema/:table/:geom/intersect', function(req, res, next) {
-    //var queryshape = ' {"type": "Point", "coordinates": [' + req.query['lng'] + ',' + req.query['lat'] + '] }';
     var queryshape = "'SRID=4326;POINT(" + req.query['lng'] +' ' + req.query['lat'] + ")'";
     var geom = req.params.geom.toLowerCase();
     if ((geom != 'features') && (geom != 'geometry')) {
@@ -72,7 +71,7 @@ module.exports.controller = function(app) {
       var sql;
       var coll;
       if (geom == 'features') {
-        sql = 'SELECT ST_AsGeoJson(ST_Transform(b.' + spatialcol + ',4326)) as geojson, * from ' + tablename + ' as a, ' + tablename + ' as b where st_distance(a.' + spatialcol + ',b.' + spatialcol + ')< .5 and ST_INTERSECTS(a.' + spatialcol + ', ST_GeographyFromText(' + queryshape + '));'
+        sql = 'SELECT ST_AsGeoJson(ST_Transform(b.' + spatialcol + ',4326)) as geojson, * from ' + tablename + ' as a, ' + tablename + ' as b where st_distance(a.' + spatialcol + ',b.' + spatialcol + ')< .00005 and ST_INTERSECTS(a.' + spatialcol + ', ST_GeographyFromText(' + queryshape + '));'
         coll = {
           type: 'FeatureCollection',
           features: []
