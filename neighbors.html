@@ -36,8 +36,8 @@ function initialize() {
       mapOptions);
    map.data.setStyle(styleFeature);
 
-  google.maps.event.addListener(map, 'click', function(e) {
-    addCountry(e.latLng, map);
+  google.maps.event.addListener(map, 'click', function(event) {
+    addCountry(event.latLng, map);
   });
   map.data.addListener('addfeature', function(event) {
     updateInfoBox(event);
@@ -46,7 +46,7 @@ function initialize() {
     updateInfoBox(event);
   });
   map.data.addListener('click', function(event) {
-    console.log(event.latLng());
+    addCountry(event.latLng, map);
   });
 }
 function updateInfoBox(event) {
