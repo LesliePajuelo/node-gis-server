@@ -57,7 +57,7 @@ module.exports.controller = function(app) {
   });
   app.get('/neighbor/:schema/:table/:geom/intersect', function(req, res, next) {
     //var queryshape = ' {"type": "Point", "coordinates": [' + req.query['lng'] + ',' + req.query['lat'] + '] }';
-    var queryshape = "'SRID=4326;POINT(" + req.query['lat'] +' ' + req.query['lng'] + ")')";
+    var queryshape = "'SRID=4326;POINT(" + req.query['lat'] +' ' + req.query['lng'] + ")'";
     var geom = req.params.geom.toLowerCase();
     if ((geom != 'features') && (geom != 'geometry')) {
       res.status(404).send("Resource '" + geom + "' not found");
