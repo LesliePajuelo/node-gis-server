@@ -26,12 +26,13 @@
 var censusMin = 3000;
 var censusMax = 2000000000;
 var ibDisplay = false;
+var map;
 function initialize() {
   var mapOptions = {
     zoom: 2,
     center: new google.maps.LatLng(0,0)
   };
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
+  map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
    map.data.setStyle(styleFeature);
 
@@ -55,8 +56,13 @@ function updateInfoBox(event) {
         event.feature.getProperty('name_sort') + ' estimated population: ' + formatNumber(Math.round(event.feature.getProperty('pop_est'),0));
 
 }
+function removeCountry(country){
+  map.data.remove(country);
+}
+
 function addCountry(position, map) {
- map.data.loadGeoJson('neighbor/manotest/countries/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
+  map.data.forEach(removeCountry);
+  map.data.loadGeoJson('neighbor/manotest/countries/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
 }
 function styleFeature(feature) {
   var low = [5, 69, 54];  // color of smallest datum
