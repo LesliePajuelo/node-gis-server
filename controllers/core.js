@@ -73,8 +73,6 @@ module.exports.controller = function(app) {
       var coll;
       if (geom == 'features') {
         sql = 'SELECT ST_AsGeoJson(ST_Transform(b.' + spatialcol + ',4326)) as geojson, * from ' + tablename + ' as a, ' + tablename + ' as b where st_distance(a.' + spatialcol + ',b.' + spatialcol + ')< .5 and ST_INTERSECTS(a.' + spatialcol + ', ST_GeographyFromText(' + queryshape + '));'
-        //sql = 'select st_asgeojson(st_transform(' + spatialcol + ',4326)) as geojson, * from ' + tablename + ' where ST_INTERSECTS(' + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));";
-        console.log(sql);
         coll = {
           type: 'FeatureCollection',
           features: []

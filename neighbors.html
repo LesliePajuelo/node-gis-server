@@ -40,12 +40,14 @@ function initialize() {
     addCountry(e.latLng, map);
   });
   map.data.addListener('addfeature', function(event) {
-  updateInfoBox(event);
-
+    updateInfoBox(event);
   });
   map.data.addListener('mouseover', function(event) {
-  updateInfoBox(event);
+    updateInfoBox(event);
   });
+  map.data.addListener('click', function(event) {
+    console.log(event.latLng());
+  }
 }
 function updateInfoBox(event) {
     if(!ibDisplay) {
