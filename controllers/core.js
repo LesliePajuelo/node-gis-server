@@ -57,7 +57,7 @@ module.exports.controller = function(app) {
   });
   app.get('/neighbor/:schema/:table/:geom/intersect', function(req, res, next) {
     //var queryshape = ' {"type": "Point", "coordinates": [' + req.query['lng'] + ',' + req.query['lat'] + '] }';
-    var queryshape = "'SRID=4326;POINT(" + req.query['lat'] +', ' + req.query['lng'] + ")')";
+    var queryshape = "'SRID=4326;POINT(" + req.query['lat'] +' ' + req.query['lng'] + ")')";
     var geom = req.params.geom.toLowerCase();
     if ((geom != 'features') && (geom != 'geometry')) {
       res.status(404).send("Resource '" + geom + "' not found");
@@ -72,7 +72,7 @@ module.exports.controller = function(app) {
       var sql;
       var coll;
       if (geom == 'features') {
-        sql = 'SELECT ST_AsGeoJson(ST_Transform(b.' + spatialcol + ',4326)) as geojson, * from ' + spatialcol + ' as a, ' + spatialcol + ' as b where st_distance(a.' + spatialcol + ',b.' + spatialcol + ')< .5 and ST_INTERSECTS(a.' + spatialcol + ', ST_GeographyFromText(' + queryshape + '));'
+        sql = 'SELECT ST_AsGeoJson(ST_Transform(b.' + spatialcol + ',4326)) as geojson, * from ' + tablename + ' as a, ' + tablename + ' as b where st_distance(a.' + spatialcol + ',b.' + spatialcol + ')< .5 and ST_INTERSECTS(a.' + spatialcol + ', ST_GeographyFromText(' + queryshape + '));'
         //sql = 'select st_asgeojson(st_transform(' + spatialcol + ',4326)) as geojson, * from ' + tablename + ' where ST_INTERSECTS(' + spatialcol + ", ST_SetSRID(ST_GeomFromGeoJSON('" + queryshape + "'),4326));";
         console.log(sql);
         coll = {
