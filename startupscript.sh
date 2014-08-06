@@ -47,7 +47,7 @@ psql sjmdatabase -c "ALTER USER postgres WITH PASSWORD 'postgres';"
 echo "tried to alter password"
 #change sjmdatabase to your database name
 cd /home/sheldon
-sudo mkdir data
+mkdir data
 cd data
 wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/110m_cultural.zip
 unzip 110m_cultural.zip
