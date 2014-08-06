@@ -54,10 +54,4 @@ unzip 110m_cultural.zip
 cd 110m_cultural
 #change sjmdatabase to your database name
 ogr2ogr -t_srs EPSG:4326 -f PostgreSQL -overwrite -lco GEOMETRY_NAME=wkb_geometry -lco ENCODING="Windows 1252" -clipsrc -180 -85.05112878 180 85.05112878 -nlt MULTIPOLYGON -nln countries   PG:"dbname='sjmdatabase' " ne_110m_admin_0_countries.shp
-cd /home/sheldon
-mkdir src
-cd src
-sudo git clone http://github.com/ManoMarks/node-gis-server.git
-cd node-gis-server
-sudo npm install
-#node server
+
