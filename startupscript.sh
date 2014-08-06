@@ -1,6 +1,6 @@
 #! /bin/bash
-# before you start, change all instances of "mmarks" to your username and all instances of "manotest" to your database name
-cd /home/mmarks
+# before you start, change all instances of "mmarks" to your username and all instances of "sjmdatabase" to your database name
+cd /home/sheldon
 apt-get update
 sudo apt-get -y install build-essential
 sudo apt-get -y install build-essential postgresql-9.1 postgresql-server-dev-9.1 libxml2-dev libproj-dev libjson0-dev libgeos-dev xsltproc docbook-xsl docbook-mathml
@@ -20,7 +20,7 @@ sudo ln -sf /usr/share/postgresql-common/pg_wrapper /usr/local/bin/raster2pgsql
 sudo apt-get -y install gdal-bin
 sudo apt-get -y install python-gdal
 sudo apt-get -y install git
-cd /home/mmarks
+cd /home/sheldon
 wget https://s3.amazonaws.com/json-c_releases/releases/json-c-0.11-nodoc.tar.gz
 tar xfz json-c-0.11-nodoc.tar.gz
 cd json-c-0.11
@@ -38,23 +38,23 @@ sudo dpkg -i node_*
 sudo apt-get -y install unzip
 sudo apt-get -y install libpq-dev
 sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
-cd /home/mmarks
+cd /home/sheldon
 sudo -u postgres createuser root -s
-createdb manotest
-psql manotest -c "CREATE EXTENSION POSTGIS;"
+createdb sjmdatabase
+psql sjmdatabase -c "CREATE EXTENSION POSTGIS;"
 echo "tried to create extension"
-psql manotest -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+psql sjmdatabase -c "ALTER USER postgres WITH PASSWORD 'postgres';"
 echo "tried to alter password"
-#change manotest to your database name
-cd /home/mmarks
+#change sjmdatabase to your database name
+cd /home/sheldon
 sudo mkdir data
 cd data
 wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/110m_cultural.zip
 unzip 110m_cultural.zip
 cd 110m_cultural
-#change manotest to your database name
-ogr2ogr -t_srs EPSG:4326 -f PostgreSQL -overwrite -lco GEOMETRY_NAME=wkb_geometry -lco ENCODING="Windows 1252" -clipsrc -180 -85.05112878 180 85.05112878 -nlt MULTIPOLYGON -nln countries   PG:"dbname='manotest' " ne_110m_admin_0_countries.shp
-cd /home/mmarks
+#change sjmdatabase to your database name
+ogr2ogr -t_srs EPSG:4326 -f PostgreSQL -overwrite -lco GEOMETRY_NAME=wkb_geometry -lco ENCODING="Windows 1252" -clipsrc -180 -85.05112878 180 85.05112878 -nlt MULTIPOLYGON -nln countries   PG:"dbname='sjmdatabase' " ne_110m_admin_0_countries.shp
+cd /home/sheldon
 mkdir src
 cd src
 sudo git clone http://github.com/ManoMarks/node-gis-server.git
