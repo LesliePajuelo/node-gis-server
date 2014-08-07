@@ -25,7 +25,7 @@ module.exports.controller = function(app) {
     var schemaname = req.params.schema;
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
-    pgclient.connect(function(err) {
+    pgclient.connect(function(err, client, done) {
       var spatialcol = 'wkb_geometry';
       var sql;
       var coll;
@@ -35,7 +35,7 @@ module.exports.controller = function(app) {
           type: 'FeatureCollection',
           features: []
         };
-        query = pgclient.query(sql);
+        query = client.query(sql);
       }
 
       query.on('row', function(result) {
@@ -53,7 +53,8 @@ module.exports.controller = function(app) {
         }
       });
 
-      query.on('end', function(err, result) {
+      query.on('end', function(err, result, done) {
+        done();
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
@@ -69,7 +70,7 @@ module.exports.controller = function(app) {
     var schemaname = req.params.schema;
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
-    pgclient.connect(function(err) {
+    pgclient.connect(function(err, client, done) {
       var spatialcol = 'wkb_geometry';
       var sql;
       var coll;
@@ -80,7 +81,7 @@ module.exports.controller = function(app) {
           type: 'FeatureCollection',
           features: []
         };
-        query = pgclient.query(sql);
+        query = client.query(sql);
       }
 
       query.on('row', function(result) {
@@ -99,6 +100,7 @@ module.exports.controller = function(app) {
       });
 
       query.on('end', function(err, result) {
+        done();
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
