@@ -1,6 +1,5 @@
-
 var data = {
-	database = "postgres://postgres:hello12345hello@localhost:5432/sjmdatabase"
+	database : "postgres://postgres:hello12345hello@localhost:5432/sjmdatabase"
 }
 
-export data;
+module.exports = data;
