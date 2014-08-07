@@ -1,6 +1,11 @@
 var pg = require('pg');
 var geojson = require('../helpers/geojson');
 var jsonp = require('../helpers/jsonp');
+var settings = require('../settings');
+
+
+var pgclient = new pg.Client(settings.database);
+
 module.exports.controller = function(app) {
 
   /* enable CORS */
@@ -17,11 +22,10 @@ module.exports.controller = function(app) {
       res.status(404).send("Resource '" + geom + "' not found");
       return;
     }
-    var client = new pg.Client(app.conString);
     var schemaname = req.params.schema;
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
-    client.connect(function(err) {
+    pgclient.connect(function(err) {
       var spatialcol = 'wkb_geometry';
       var sql;
       var coll;
@@ -31,7 +35,7 @@ module.exports.controller = function(app) {
           type: 'FeatureCollection',
           features: []
         };
-        query = client.query(sql);
+        query = pgclient.query(sql);
       }
 
       query.on('row', function(result) {
@@ -62,11 +66,10 @@ module.exports.controller = function(app) {
       res.status(404).send("Resource '" + geom + "' not found");
       return;
     }
-    var client = new pg.Client(app.conString);
     var schemaname = req.params.schema;
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
-    client.connect(function(err) {
+    pgclient.connect(function(err) {
       var spatialcol = 'wkb_geometry';
       var sql;
       var coll;
@@ -77,7 +80,7 @@ module.exports.controller = function(app) {
           type: 'FeatureCollection',
           features: []
         };
-        query = client.query(sql);
+        query = pgclient.query(sql);
       }
 
       query.on('row', function(result) {
@@ -102,5 +105,4 @@ module.exports.controller = function(app) {
     });
   });
 
-    var client = new pg.Client(app.conString);
 };

@@ -1,0 +1,6 @@
+
+var data = {
+	database = "postgres://postgres:hello12345hello@localhost:5432/sjmdatabase"
+}
+
+export data;
