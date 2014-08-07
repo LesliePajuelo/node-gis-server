@@ -26,6 +26,7 @@ module.exports.controller = function(app) {
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
     pgclient.connect(function(err, client, done) {
+      console.log("DONE", done);
       var spatialcol = 'wkb_geometry';
       var sql;
       var coll;
@@ -54,7 +55,7 @@ module.exports.controller = function(app) {
       });
 
       query.on('end', function(err, result, done) {
-        done();
+        //done();
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
@@ -100,7 +101,7 @@ module.exports.controller = function(app) {
       });
 
       query.on('end', function(err, result) {
-        done();
+        //done();
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
