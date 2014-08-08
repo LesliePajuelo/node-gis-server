@@ -54,11 +54,11 @@ module.exports.controller = function(app) {
       });
 
       query.on('end', function(err, result, done) {
+        console.log("DONE", done);
         //done();
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
-      pgclient.end();
     });
   });
   app.get('/neighbor/:schema/:table/:geom/intersect', function(req, res, next) {
@@ -101,11 +101,11 @@ module.exports.controller = function(app) {
       });
 
       query.on('end', function(err, result) {
+        console.log("DONE", done);
         //done();
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
-      pgclient.end();
     });
   });
 
