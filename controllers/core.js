@@ -25,7 +25,7 @@ module.exports.controller = function(app) {
     var schemaname = req.params.schema;
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
-    pgclient.connect(function(err, client, done) {
+    pgclient.connect(function(err) {
       console.log("DONE", done);
       var spatialcol = 'wkb_geometry';
       var sql;
@@ -36,7 +36,7 @@ module.exports.controller = function(app) {
           type: 'FeatureCollection',
           features: []
         };
-        query = client.query(sql);
+        query = pgclient.query(sql);
       }
 
       query.on('row', function(result) {
@@ -59,6 +59,7 @@ module.exports.controller = function(app) {
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
+      pgclient.end();
     });
   });
   app.get('/neighbor/:schema/:table/:geom/intersect', function(req, res, next) {
@@ -71,7 +72,7 @@ module.exports.controller = function(app) {
     var schemaname = req.params.schema;
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
-    pgclient.connect(function(err, client, done) {
+    pgclient.connect(function(err) {
       var spatialcol = 'wkb_geometry';
       var sql;
       var coll;
@@ -82,7 +83,7 @@ module.exports.controller = function(app) {
           type: 'FeatureCollection',
           features: []
         };
-        query = client.query(sql);
+        query = pgclient.query(sql);
       }
 
       query.on('row', function(result) {
@@ -105,6 +106,7 @@ module.exports.controller = function(app) {
         res.setHeader('Content-Type', 'application/json');
         res.send(jsonp.getJsonP(req.query.callback, coll));
       });
+      pgclient.end();
     });
   });
 
