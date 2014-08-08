@@ -26,7 +26,6 @@ module.exports.controller = function(app) {
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
     pgclient.connect(function(err) {
-      console.log("DONE", done);
       var spatialcol = 'wkb_geometry';
       var sql;
       var coll;
