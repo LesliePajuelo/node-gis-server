@@ -39,6 +39,8 @@ function initialize() {
     // addCountry(e.latLng, map);
 
     addAZLakes(e.latLng, map);
+    addAZWildness(e.latLng, map);
+    addAZCities(e.latLng, map);
     addAZBoundary(e.latLng, map);
 
   });
@@ -64,17 +66,24 @@ function updateInfoBox(event) {
 function addAZLakes(position, map) {
   map.data.loadGeoJson('/vector/sjmdatabase/azlakes/all/intersect?lat=' + position.lat() + '&lng=' + position.lng());
 }
+function addAZWildness(position, map) {
+  map.data.loadGeoJson('/vector/sjmdatabase/wilderness/all/intersect?lat=' + position.lat() + '&lng=' + position.lng());
+}
+
+function addAZCities(position, map) {
+  map.data.loadGeoJson('/vector/sjmdatabase/cities/all/intersect?lat=' + position.lat() + '&lng=' + position.lng());
+}
 
 function addAZBoundary(position, map) {
   map.data.loadGeoJson('/vector/sjmdatabase/azboundary/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
 }
 
-function addCountry(position, map) {
-  console.log("SUP OLD");
+// function addCountry(position, map) {
+//   console.log("SUP OLD");
   
-  map.data.loadGeoJson('/vector/sjmdatabase/countries/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
+//   map.data.loadGeoJson('/vector/sjmdatabase/countries/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
 
-}
+// }
 function styleFeature(feature) {
   //Keep this as a way to color based on a gradient or something
   // var low = [5, 69, 54];  // color of smallest datum
@@ -93,8 +102,15 @@ function styleFeature(feature) {
 
   // console.log("LAKEID", feature.getProperty('lakes_id'));
 
+//wilderness green
+//cities orange
+
   if(feature.getProperty('lakes_')) {
     strokeColor = "blue";
+  } else if(feature.getProperty('city')) {
+    strokeColor = "orange";
+  } else if(feature.getProperty('wilderness')) {
+    strokeColor = "green";
   } else {
     strokeColor = "red";
   }

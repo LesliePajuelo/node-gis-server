@@ -23,7 +23,8 @@ module.exports.controller = function(app) {
     var tablename = req.params.table;
     var fullname = schemaname + '.' + tablename;
     pg.connect(settings.database, function(err, client, done) {
-      var spatialcol = 'wkb_geometry';
+      // var spatialcol = 'wkb_geometry';
+      var spatialcol = 'geom';
       var sql;
       var coll;
       if (geom == 'features') {
