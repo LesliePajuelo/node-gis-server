@@ -56,7 +56,8 @@ function updateInfoBox(event) {
 
 }
 function addCountry(position, map) {
- map.data.loadGeoJson('vector/manotest/countries/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
+  console.log("SUP 2");
+ map.data.loadGeoJson('/vector/sjmdatabase/countries/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
 }
 function styleFeature(feature) {
   var low = [5, 69, 54];  // color of smallest datum

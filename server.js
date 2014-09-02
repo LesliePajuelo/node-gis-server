@@ -17,8 +17,9 @@ process.on('uncaughtException', function (error) {
 // dynamically include routes (Controller)
 fs.readdirSync('./controllers').forEach(function (file) {
   if(file.substr(-3) == '.js') {
-      route = require('./controllers/' + file);
-      route.controller(app);
+    console.log("Loaded Controller: ", file);
+    route = require('./controllers/' + file);
+    route.controller(app);
   }
 
 });
