@@ -15,7 +15,7 @@ module.exports.controller = function(app) {
   app.get('/vector/:schema/:table/:geom/intersect', function(req, res, next) {
     var queryshape = ' {"type": "Point", "coordinates": [' + req.query['lng'] + ',' + req.query['lat'] + '] }';
     var geom = req.params.geom.toLowerCase();
-    if ((geom != 'features') && (geom != 'geometry')) {
+    if ((geom != 'features') && (geom != 'geometry') && (geom != 'all')) {
       res.status(404).send("Resource '" + geom + "' not found");
       return;
     }
@@ -35,13 +35,22 @@ module.exports.controller = function(app) {
         query = client.query(sql);
       }
 
+      if (geom == 'all') {
+        sql = 'select st_asgeojson(st_transform(' + spatialcol + ',4326)) as geojson, * from ' + tablename;
+        coll = {
+          type: 'FeatureCollection',
+          features: []
+        };
+        query = client.query(sql);
+      }
+
       query.on('row', function(result) {
         var props = new Object;
         if (!result) {
           return res.send('No data found');
         }
         else {
-          if (geom == 'features') {
+          if (geom == 'features' ||  geom == 'all') {
             coll.features.push(geojson.getFeatureResult(result, spatialcol));
           } else if (geom == 'geometry') {
             var shape = JSON.parse(result.geojson);
