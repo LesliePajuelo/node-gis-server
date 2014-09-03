@@ -1,6 +1,8 @@
 Node GIS Server
 ============
 
+In support of AGIC Symposium 2014 presentation: https://github.com/tooshel/agic2014
+
 Node.js application to provide a GeoJSON-based REST interface to PostGIS data.
 
 This code is based on code originally released by Bill Dollins, as described here: http://blog.geomusings.com/2014/02/18/a-little-deeper-with-node-and-postgis
