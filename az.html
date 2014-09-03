@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PostGIS AZ</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    #info-box {
+      background-color: white;
+      border: 1px solid black;
+      top: 30px;
+      height: 20px;
+      padding: 10px;
+      position: absolute;
+      left: 100px;
+    }
+    </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+var ibDisplay = false;
+function initialize() {
+  var mapOptions = {
+    zoom: 7,
+    center: new google.maps.LatLng(34.429042, -111.726041)
+  };
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+   map.data.setStyle(styleFeature);
+
+  // addCountry(e.latLng, map);
+  // addAZBoundary(e.latLng, map);
+  addAZLakes(map);
+  addAZWildness(map);
+  addAZCities(map);
+  // google.maps.event.addListener(map, 'click', function(e) {
+  // });
+
+  map.data.addListener('addfeature', function(event) {
+    updateInfoBox(event, false);
+  });
+
+
+  map.data.addListener('mouseover', function(event) {
+    updateInfoBox(event, true);
+  });
+}
+function updateInfoBox(event, display) {
+    if(display) {
+      document.getElementById('info-box').style.display = 'inline';
+    } else {
+      document.getElementById('info-box').style.display = 'hidden';
+    }
+
+
+    if(event.feature.getProperty('lakes_')) {
+      myinfo = "Lake: "+event.feature.getProperty('name') + ' Area: ' + formatNumber(Math.round(event.feature.getProperty('area'), 0));
+    } else if(event.feature.getProperty('city')) {
+      myinfo = "City: "+event.feature.getProperty('name') + ' Population: ' + formatNumber(Math.round(event.feature.getProperty('pop2013'), 0));
+    } else if(event.feature.getProperty('wilderness')) {
+      myinfo = "Wilderness: "+event.feature.getProperty('name') + ' Area: ' + formatNumber(Math.round(event.feature.getProperty('area'), 0));
+    } else {
+      myinfo = "Within AZ";
+    }
+
+    //event.feature.getProperty('name_sort') + ' estimated population: ' + formatNumber(Math.round(event.feature.getProperty('pop_est'),0))
+
+    document.getElementById('info-box').textContent = myinfo;
+}
+
+function addAZLakes(map) {
+  map.data.loadGeoJson('/vector/sjmdatabase/azlakes/all/intersect');
+}
+function addAZWildness(map) {
+  map.data.loadGeoJson('/vector/sjmdatabase/wilderness/all/intersect');
+}
+
+function addAZCities(map) {
+  map.data.loadGeoJson('/vector/sjmdatabase/cities/all/intersect');
+}
+
+function addAZBoundary(position, map) {
+  map.data.loadGeoJson('/vector/sjmdatabase/azboundary/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
+}
+
+// function addCountry(position, map) {
+//   console.log("SUP OLD");
+  
+//   map.data.loadGeoJson('/vector/sjmdatabase/countries/features/intersect?lat=' + position.lat() + '&lng=' + position.lng());
+
+// }
+function styleFeature(feature) {
+  //Keep this as a way to color based on a gradient or something
+  // var low = [5, 69, 54];  // color of smallest datum
+  // var high = [151, 83, 34];   // color of largest datum
+
+  // // delta represents where the value sits between the min and max
+  // var delta = (feature.getProperty('pop_est') - censusMin) /
+  //     (censusMax - censusMin);
+
+  // var color = [];
+  // for (var i = 0; i < 3; i++) {
+  //   // calculate an integer color based on the delta
+  //   color[i] = (high[i] - low[i]) * delta + low[i];
+  // }
+
+
+  // console.log("LAKEID", feature.getProperty('lakes_id'));
+
+//wilderness green
+//cities orange
+
+  if(feature.getProperty('lakes_')) {
+    strokeColor = "blue";
+  } else if(feature.getProperty('city')) {
+    strokeColor = "orange";
+  } else if(feature.getProperty('wilderness')) {
+    strokeColor = "green";
+  } else {
+    strokeColor = "red";
+  }
+
+
+  var outlineWeight = 0.5, zIndex = 1;
+  if (feature.getProperty('state') === 'hover') {
+    outlineWeight = zIndex = 2;
+  }
+  var showRow = true;
+  if (feature.getProperty('pop_est') <4000.0) showRow = false;
+
+  return {
+    strokeWeight: 2.0,
+    strokeColor: strokeColor,
+    zIndex: zIndex,
+    // fillColor: 'hsl(' + color[0] + ',' + color[1] + '%,' + color[2] + '%)',
+    fillOpacity: 0.0,
+    visible: showRow
+  };
+}
+
+function formatNumber(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+    <div id="info-box" style="display:none"></div>
+  </body>
+</html>
+
