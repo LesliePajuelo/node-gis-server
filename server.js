@@ -6,8 +6,6 @@ var app = express();
 app.use(express.bodyParser());
 app.use(app.router);
 
-//app.conString = "postgres://postgres:hello12345hello@localhost:5432/sjmdatabase";
-
 app.use(error);
 
 process.on('uncaughtException', function (error) {

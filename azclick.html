@@ -23,8 +23,6 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script>
-var censusMin = 3000;
-var censusMax = 2000000000;
 var ibDisplay = false;
 function initialize() {
   var mapOptions = {
@@ -37,29 +35,43 @@ function initialize() {
 
   google.maps.event.addListener(map, 'click', function(e) {
     // addCountry(e.latLng, map);
-
     addAZLakes(e.latLng, map);
     addAZWildness(e.latLng, map);
     addAZCities(e.latLng, map);
-    addAZBoundary(e.latLng, map);
-
+    //addAZBoundary(e.latLng, map);
   });
 
-  // map.data.addListener('addfeature', function(event) {
-  // updateInfoBox(event);
+  map.data.addListener('addfeature', function(event) {
+    updateInfoBox(event, false);
+  });
 
-  // });
-  // map.data.addListener('mouseover', function(event) {
-  // updateInfoBox(event);
-  // });
+
+  map.data.addListener('mouseover', function(event) {
+    updateInfoBox(event, true);
+  });
 }
-function updateInfoBox(event) {
-    if(!ibDisplay) {
-      ibDisplay = true;
+function updateInfoBox(event, display) {
+    if(display) {
       document.getElementById('info-box').style.display = 'inline';
+    } else {
+      document.getElementById('info-box').style.display = 'hidden';
     }
-    document.getElementById('info-box').textContent =
-        event.feature.getProperty('name_sort') + ' estimated population: ' + formatNumber(Math.round(event.feature.getProperty('pop_est'),0));
+
+
+    if(event.feature.getProperty('lakes_')) {
+      myinfo = "Lake: "+event.feature.getProperty('name') + ' Area: ' + formatNumber(Math.round(event.feature.getProperty('area'), 0));
+    } else if(event.feature.getProperty('city')) {
+      myinfo = "City: "+event.feature.getProperty('name') + ' Population: ' + formatNumber(Math.round(event.feature.getProperty('pop2013'), 0));
+    } else if(event.feature.getProperty('wilderness')) {
+      myinfo = "Wilderness: "+event.feature.getProperty('name') + ' Area: ' + formatNumber(Math.round(event.feature.getProperty('area'), 0));
+    } else {
+      myinfo = "Within AZ";
+    }
+
+    //event.feature.getProperty('name_sort') + ' estimated population: ' + formatNumber(Math.round(event.feature.getProperty('pop_est'),0))
+
+    document.getElementById('info-box').textContent = myinfo;
+      
 
 }
 
